@@ -1,4 +1,6 @@
+from __future__ import division
 import random
+import matplotlib.pyplot as plt
 
 class Player():
 	def __init__(self, name, sets_won, games_won, points_won):
@@ -6,8 +8,6 @@ class Player():
 		self.sets_won = sets_won
 		self.games_won = games_won
 		self.points_won = points_won
-
-
 
 class Match():
 
@@ -67,10 +67,9 @@ class Match():
 	def play_game(self, me, fed):
 		while(max(me.points_won, fed.points_won) < 4):
 			if me.points_won == 3 and fed.points_won == 3:
-				deuce_winner = self.play_point(me, fed, self.server)
-				ad_winner = self.play_point(me, fed, self.server)
-				if deuce_winner.name == ad_winner.name:
-					ad_winner.points_won += 1					
+				while(abs(me.points_won - fed.points_won) != 2):
+					diffof2_winner = self.play_point(me, fed, self.server)
+					diffof2_winner.points_won += 1							
 			else:
 				winner = self.play_point(me, fed, self.server)
 				winner.points_won += 1
@@ -106,6 +105,8 @@ class Match():
 
 			winner = self.play_game(me, fed)
 			winner.games_won += 1
+			fed.points_won = 0
+			me.points_won = 0
 
 		return me if me.games_won > fed.games_won else fed 
 
@@ -122,11 +123,37 @@ class Match():
 			me.points_won = 0
 			fed.points_won = 0
 
-		print self.set_1, self.set_2, self.set_3, self.set_4, self.set_5
+		# if me.sets_won > fed.sets_won:
+		# 	print self.set_1, self.set_2, self.set_3, self.set_4, self.set_5
+		return fed if fed.sets_won > me.sets_won else me
 
 if __name__ == '__main__':
-	me = Player("shubhankar", 0, 0, 0)
-	fed = Player("federer", 0, 0, 0)
 
-	Match(me, fed).play_match(me, fed)
+	arr = []
+	starting_scores = []
+	t_arr = []
+	temp = 0
+	for sets in range(0, 3, 1):
+		for games in range(0,6,1):
+			for points in range(0, 4, 1):				
+				count = 0
+				for iter in range(10000):
+					fed = Player("federer", 0, 0, 0)
+					me = Player("shubhankar", sets, games, points)
+					winner = Match(me, fed).play_match(me, fed)
+					if winner == me:
+						count += 1
+				t_arr.append(temp)
+				temp += 1
+				arr.append(float(count/10000))
+				starting_scores.append(str((sets,games,points)))
+
+	plt.plot(arr)
+	plt.xticks(t_arr, starting_scores, rotation="vertical")
+	plt.xlabel("My Starting Score, Format ==> (Sets, Games, Points)")
+	plt.ylabel("Probability of win (as per simulation)")
+	plt.show()
+
+	# me = Player("shubhankar", 2, 1, 3)
+	# winner = Match(me, fed).play_match(me, fed)
 
