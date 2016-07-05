@@ -1,21 +1,23 @@
 import random
 
 class Player():
-	def __init__(self, name):
+	def __init__(self, name, sets_won, games_won, points_won):
 		self.name = name
-		self.sets_won = 0
-		self.games_won = 0
-		self.points_won = 0
+		self.sets_won = sets_won
+		self.games_won = games_won
+		self.points_won = points_won
+
+
 
 class Match():
 
-	def __init__(self):
+	def __init__(self, me, fed):
 		self.set_1 = "-1"  
 		self.set_2 = "-1"  
 		self.set_3 = "-1"  
 		self.set_4 = "-1"  
 		self.set_5 = "-1"
-		self.set_count = 1
+		self.set_count = me.sets_won + fed.sets_won + 1
 		self.server = 0  #Federer's Service
 		self.toggle = [1, 0]
 
@@ -33,13 +35,11 @@ class Match():
 			if ran <= self.fed_serve:
 				return fed
 			else:
-				print "yay"
 				return me
 		else:
 			if ran <= self.fed_return:
 				return fed
 			else:
-				print "yay"
 				return me
 
 	def play_tiebreak(self, me, fed):
@@ -65,9 +65,6 @@ class Match():
 		return me if me.points_won > fed.points_won else fed 
 
 	def play_game(self, me, fed):
-		me.points_won = 0
-		fed.points_won = 0
-
 		while(max(me.points_won, fed.points_won) < 4):
 			if me.points_won == 3 and fed.points_won == 3:
 				deuce_winner = self.play_point(me, fed, self.server)
@@ -82,8 +79,6 @@ class Match():
 		return me if me.points_won > fed.points_won else fed 
 
 	def play_set(self, me, fed):
-		me.games_won = 0
-		fed.games_won = 0
 		while(max(me.games_won, fed.games_won) < 6):
 			
 			if self.set_count != 5:			
@@ -103,7 +98,7 @@ class Match():
 						return tiebreak_winner
 			
 			elif self.set_count == 5:
-				if me.games_won == 5 and fed.games_won == 5:
+				if me.games_won >= 5 and fed.games_won >= 5:
 					while(abs(me.games_won - fed.games_won) != 2):
 						diffof2_winner = self.play_game(me, fed)
 						diffof2_winner.games_won += 1
@@ -122,11 +117,16 @@ class Match():
 			var = "set_%s"%self.set_count
 			self.__dict__[var] = "%s-%s"%(me.games_won, fed.games_won)
 			self.set_count += 1
+			me.games_won = 0
+			fed.games_won = 0
+			me.points_won = 0
+			fed.points_won = 0
 
 		print self.set_1, self.set_2, self.set_3, self.set_4, self.set_5
 
 if __name__ == '__main__':
-	me = Player("shubhankar")
-	fed = Player("federer")
+	me = Player("shubhankar", 0, 0, 0)
+	fed = Player("federer", 0, 0, 0)
 
-	Match().play_match(me, fed)
+	Match(me, fed).play_match(me, fed)
+
