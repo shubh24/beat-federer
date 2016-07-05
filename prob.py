@@ -22,7 +22,7 @@ def win_match(p):
 def third_set_five_love(me, fed, p):
 	if fed.games_won < 7:
 		fed.games_won += 1
-		return  win_game(p) + (1-win_game(p))*(third_set(me, fed, p)) 
+		return  win_game(p) + (1-win_game(p))*(third_set_five_love(me, fed, p)) 
 	else:
 		return 0
 
@@ -70,8 +70,6 @@ if __name__ == '__main__':
 	p = 0.01
 	prob = 0
 
-	#prob = p + (1-p)*third_set_five_love(me, fed, p) WHEN going for 2 sets all, 5-0 in the third set
-
-	#prob += (1-prob)*win_set(p)
-
-	plot()
+	# prob = p + (1-p)*third_set_five_love(me, fed, p) #WHEN going for 2 sets all, 5-0 in the third set
+	# prob += (1-prob)*win_set(p)
+	# plot()

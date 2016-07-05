@@ -133,7 +133,7 @@ if __name__ == '__main__':
 	starting_scores = []
 	t_arr = []
 	temp = 0
-	for sets in range(0, 3, 1):
+	for sets in range(2, 3, 1):
 		for games in range(0,6,1):
 			for points in range(0, 4, 1):				
 				count = 0
@@ -149,7 +149,7 @@ if __name__ == '__main__':
 				starting_scores.append(str((sets,games,points)))
 
 	plt.plot(arr)
-	plt.xticks(t_arr, starting_scores, rotation="vertical")
+	plt.xticks(t_arr, starting_scores, rotation = 30)
 	plt.xlabel("My Starting Score, Format ==> (Sets, Games, Points)")
 	plt.ylabel("Probability of win (as per simulation)")
 	plt.show()
