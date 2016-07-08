@@ -43,8 +43,8 @@ class Match():
 				return me
 
 	def play_tiebreak(self, me, fed):
-		me.points_won = 0
-		fed.points_won = 0
+		# me.points_won = 6
+		# fed.points_won = 0
 		while(max(me.points_won, fed.points_won) < 7):
 			if (me.points_won + fed.points_won)%2 == 1:
 				self.server = self.toggle[self.server] #Toggle server
@@ -108,6 +108,14 @@ class Match():
 			fed.points_won = 0
 			me.points_won = 0
 
+		if me.games_won + fed.games_won == 11:
+			winner = self.play_game(me, fed)
+			winner.games_won += 1
+
+		if me.games_won == 6 and fed.games_won == 6:
+			winner = self.play_tiebreak(me, fed)
+			winner.games_won += 1
+
 		return me if me.games_won > fed.games_won else fed 
 
 	def play_match(self, me, fed):
@@ -148,6 +156,20 @@ if __name__ == '__main__':
 				arr.append(float(count/10000))
 				starting_scores.append(str((sets,games,points)))
 
+	for points_me in range(0, 7, 1):
+		count = 0
+		for iter in range(10000):
+			fed = Player("federer", 0, 6, 0)
+			me = Player("shubhankar", 2, 6, points_me)
+			winner = Match(me, fed).play_match(me, fed)
+			if winner == me:
+				count += 1
+		t_arr.append(temp)
+		temp += 1
+		arr.append(float(count/10000))
+		starting_scores.append(str((2,6,points_me)))
+
+
 	plt.plot(arr)
 	plt.xticks(t_arr, starting_scores, rotation = 30)
 	plt.xlabel("My Starting Score, Format ==> (Sets, Games, Points)")
@@ -156,4 +178,3 @@ if __name__ == '__main__':
 
 	# me = Player("shubhankar", 2, 1, 3)
 	# winner = Match(me, fed).play_match(me, fed)
-

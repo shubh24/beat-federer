@@ -70,6 +70,7 @@ if __name__ == '__main__':
 	p = 0.01
 	prob = 0
 
-	# prob = p + (1-p)*third_set_five_love(me, fed, p) #WHEN going for 2 sets all, 5-0 in the third set
-	# prob += (1-prob)*win_set(p)
+	prob = p + (1-p)*p + (1-p)*(1-p)*p + pow((1-p), 4)*third_set_five_love(me, fed, p) #WHEN going for 2 sets all, 5-0 in the third set
+	prob += (1-prob)*win_set(p)
+	print prob
 	# plot()
